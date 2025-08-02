@@ -20,21 +20,16 @@ const RatePage = () => {
 
   // Load all purities and rates
   useEffect(() => {
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [purityRes, rateRes] = await Promise.all([getPurities(), getRates()]);
-      setPurityOptions(purityRes?.data || []);
-      setRateHistory(rateRes?.data || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchData();
+  setLoading(true);
+  Promise.all([getPurities(), getRates()])
+    .then(([purityRes, rateRes]) => {
+      setPurityOptions(purityRes.data); // if purityRes.data is array
+      setRateHistory(rateRes); // now a plain array of rates
+    })
+    .catch((err) => console.error("Error loading data", err))
+    .finally(() => setLoading(false));
 }, []);
+
 
   // Refetch filtered rates
   useEffect(() => {
