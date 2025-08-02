@@ -1,0 +1,1 @@
+export const METALS = ["Gold", "Silver", "Platinum"];
