@@ -79,7 +79,7 @@ const PurityPage = () => {
       {loading ? (
         <Spinner />
       ) : (
-        <div className="max-w-3xl mx-auto py-10">
+        <div className="max-w-3xl mx-auto py-10 px-4">
           <h2 className="text-2xl font-bold text-center mb-10">
             Purity Mangement
           </h2>

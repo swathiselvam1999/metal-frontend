@@ -3,6 +3,8 @@ import { METALS } from "../constants/metals";
 import { getPurities } from "../services/purityService";
 import { addRate, getRates, getLatestRate } from "../services/rateService";
 import Spinner from "../components/Spinner";
+import toast from "react-hot-toast";
+
 
 const RatePage = () => {
   const [metal, setMetal] = useState("");
@@ -36,7 +38,7 @@ const RatePage = () => {
           metal: filterMetal,
           purity: filterPurity,
         });
-        setRateHistory(res.data);
+        setRateHistory(Array.isArray(res) ? res : []);
       } finally {
         setLoading(false);
       }
@@ -51,7 +53,7 @@ const RatePage = () => {
       const fetchLatest = async () => {
         try {
           const res = await getLatestRate(metal, purity);
-          setLatestRate(res.data);
+          setLatestRate(res);
         } catch {
           setLatestRate(null);
         }
@@ -72,6 +74,7 @@ const RatePage = () => {
       setRate("");
       setRateDate("");
       setLatestRate(null);
+      toast.success("Added Successfully");
       const res = await getRates({
         metal: filterMetal,
         purity: filterPurity,
