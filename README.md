@@ -1,12 +1,73 @@
-# React + Vite
+# 💎 Metal Rate Management System – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend of the **Metal Rate Management System**, a full-stack MERN application to manage metal rate entries, purity levels, and filter rate history.
 
-Currently, two official plugins are available:
+Deployed with:
+- Frontend: **Vercel**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 Backend repo: [metal-backend](https://github.com/swathiselvam1999/metal-backend)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🧰 Tech Stack
+
+- **Frontend:** React, Vite, Tailwind CSS, Axios, React Router
+
+---
+
+## 🎨 Frontend Setup
+
+### Prerequisites
+
+- Node.js (v16+)
+- Vite
+
+### Setup
+
+```bash
+git clone https://github.com/swathiselvam1999/metal-frontend.git
+cd metal-frontend
+npm install
+```
+
+### Configure Environment
+
+Create a `.env` file in the root of the frontend folder:
+
+```env
+VITE_API_BASE_URL=https://metal-backend-p9le.onrender.com
+```
+
+### Run the App
+
+```bash
+npm run dev
+```
+
+App will start at: `http://localhost:5173`
+
+---
+
+## 🌐 Frontend Deployment (Vercel)
+
+1. Push this repo to GitHub
+2. Go to [https://vercel.com](https://vercel.com)
+3. Import your GitHub repo
+4. Set project root: `/`
+5. Add environment variable: `VITE_API_BASE_URL` with your Render backend URL
+6. Deploy
+
+Deployed frontend URL:  
+`https://metal-frontend-flame.vercel.app/rate`
+
+---
+
+## 👩‍💻 Author
+
+- Swathi Selvam – [GitHub](https://github.com/swathiselvam1999)
+
+---
+
+## 📄 License
+
+MIT
