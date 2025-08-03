@@ -5,7 +5,6 @@ import { addRate, getRates, getLatestRate } from "../services/rateService";
 import Spinner from "../components/Spinner";
 import toast from "react-hot-toast";
 
-
 const RatePage = () => {
   const [metal, setMetal] = useState("");
   const [purity, setPurity] = useState("");
@@ -18,29 +17,28 @@ const RatePage = () => {
   const [filterMetal, setFilterMetal] = useState("");
   const [filterPurity, setFilterPurity] = useState("");
 
-  // Load all purities and rates
+  // Load all purities and initial rates
   useEffect(() => {
-  setLoading(true);
-  Promise.all([getPurities(), getRates()])
-    .then(([purityRes, rateRes]) => {
-      setPurityOptions(purityRes.data); // if purityRes.data is array
-      setRateHistory(rateRes); // now a plain array of rates
-    })
-    .catch((err) => console.error("Error loading data", err))
-    .finally(() => setLoading(false));
-}, []);
-
+    setLoading(true);
+    Promise.all([getPurities(), getRates()])
+      .then(([purityRes, rateRes]) => {
+        setPurityOptions(purityRes.data);
+        setRateHistory(rateRes); // ✅ Fixed here
+      })
+      .catch((err) => console.error("Error loading data", err))
+      .finally(() => setLoading(false));
+  }, []);
 
   // Refetch filtered rates
   useEffect(() => {
     const fetchFilteredRates = async () => {
       setLoading(true);
       try {
-        const res = await getRates({
+        const filteredRates = await getRates({
           metal: filterMetal,
           purity: filterPurity,
         });
-        setRateHistory(Array.isArray(res) ? res : []);
+        setRateHistory(filteredRates);
       } finally {
         setLoading(false);
       }
@@ -77,11 +75,12 @@ const RatePage = () => {
       setRateDate("");
       setLatestRate(null);
       toast.success("Added Successfully");
-      const res = await getRates({
+
+      const updatedRates = await getRates({
         metal: filterMetal,
         purity: filterPurity,
       });
-      setRateHistory(res.data);
+      setRateHistory(updatedRates); // ✅ Fixed here
     } finally {
       setLoading(false);
     }
@@ -128,15 +127,11 @@ const RatePage = () => {
                 required
               >
                 <option value="">Select Purity</option>
-                {[
-                  ...new Set(
-                    purityOptions
-                      .filter(
-                        (p) => p.metal.toLowerCase() === metal.toLowerCase()
-                      )
-                      .map((p) => p.purity)
-                  ),
-                ].map((p) => (
+                {[...new Set(
+                  purityOptions
+                    .filter((p) => p.metal.toLowerCase() === metal.toLowerCase())
+                    .map((p) => p.purity)
+                )].map((p) => (
                   <option key={p} value={p}>
                     {p}
                   </option>
@@ -159,7 +154,7 @@ const RatePage = () => {
                   type="number"
                   value={rate}
                   onChange={(e) => setRate(e.target.value)}
-                  className="w-full p-2 border rounded outline-1 outline-amber-200 "
+                  className="w-full p-2 border rounded outline-1 outline-amber-200"
                   required
                 />
               </div>
@@ -188,9 +183,7 @@ const RatePage = () => {
             <h2 className="text-2xl font-semibold mb-4">Rate History</h2>
             <div className="flex gap-4 items-end mb-6">
               <div className="w-1/2">
-                <label className="block mb-1 font-medium">
-                  Filter by Metal
-                </label>
+                <label className="block mb-1 font-medium">Filter by Metal</label>
                 <select
                   value={filterMetal}
                   onChange={(e) => setFilterMetal(e.target.value)}
@@ -206,28 +199,22 @@ const RatePage = () => {
               </div>
 
               <div className="w-1/2">
-                <label className="block mb-1 font-medium">
-                  Filter by Purity
-                </label>
+                <label className="block mb-1 font-medium">Filter by Purity</label>
                 <select
                   value={filterPurity}
                   onChange={(e) => setFilterPurity(e.target.value)}
                   className="w-full border p-2 rounded"
                 >
                   <option value="">All Purities</option>
-                  {[
-                    ...new Set(
-                      purityOptions
-                        .filter(
-                          (p) =>
-                            !filterMetal ||
-                            p.metal.toLowerCase() === filterMetal.toLowerCase()
-                        )
-                        .map((p) => p.purity)
-                    ),
-                  ].map((purity) => (
-                    <option key={purity} value={purity}>
-                      {purity}
+                  {[...new Set(
+                    purityOptions
+                      .filter((p) =>
+                        !filterMetal || p.metal.toLowerCase() === filterMetal.toLowerCase()
+                      )
+                      .map((p) => p.purity)
+                  )].map((p) => (
+                    <option key={p} value={p}>
+                      {p}
                     </option>
                   ))}
                 </select>
@@ -255,16 +242,17 @@ const RatePage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {rateHistory.map((item) => (
-                    <tr key={item._id} className="border-t">
-                      <td className="px-4 py-2">{item.metal}</td>
-                      <td className="px-4 py-2">{item.purity}</td>
-                      <td className="px-4 py-2">₹{item.rate}</td>
-                      <td className="px-4 py-2">
-                        {new Date(item.date).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
+                  {Array.isArray(rateHistory) &&
+                    rateHistory.map((item) => (
+                      <tr key={item._id} className="border-t">
+                        <td className="px-4 py-2">{item.metal}</td>
+                        <td className="px-4 py-2">{item.purity}</td>
+                        <td className="px-4 py-2">₹{item.rate}</td>
+                        <td className="px-4 py-2">
+                          {new Date(item.date).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
